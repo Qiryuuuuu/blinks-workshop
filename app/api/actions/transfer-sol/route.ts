@@ -18,7 +18,7 @@ export const OPTIONS = GET;
 
 export const POST = async (req: Request) => {
     const body: ActionPostRequest = await req.json();
-    const transaction = await transferSolTransaction({ from: body.account, amount: 0.0001 })
+    const transaction = await transferSolTransaction({ from: body.account, amount: 2})
 
     const payload: ActionPostResponse = await createPostResponse({
         fields: {
