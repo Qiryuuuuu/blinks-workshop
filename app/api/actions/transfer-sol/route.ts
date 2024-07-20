@@ -3,10 +3,10 @@ import { transferSolTransaction } from "./transaction";
 
 export const GET = async (req: Request) => {
     const payload: ActionGetResponse = {
-        title: "Test your luck! and win amazing prizes",
-        icon: "https://w0.peakpx.com/wallpaper/288/839/HD-wallpaper-world-cup-trophy-art-yellow-art-world-cup-trophy.jpg",
-        description: "Get a chance to get amazing rewards by only 1 SOL!",
-        label: "Register"
+        title: "Join Kyle's Giveaway",
+        icon: "https://i.imgur.com/grf925K.jpeg",
+        description: "It's your lucky day today! 🏆",
+        label: "Enter Giveaway"
     }
 
     return Response.json(payload, {
@@ -17,16 +17,35 @@ export const GET = async (req: Request) => {
 export const OPTIONS = GET;
 
 export const POST = async (req: Request) => {
-    const body: ActionPostRequest = await req.json();
-    const transaction = await transferSolTransaction({ from: body.account, amount: 1})
+    try {
+        const body: ActionPostRequest = await req.json();
 
-    const payload: ActionPostResponse = await createPostResponse({
-        fields: {
-            transaction,
-            message: `Send 1 SOL`,
-        },
-    });
-    return Response.json(payload, {
-        headers: ACTIONS_CORS_HEADERS,
-    });
+        // Log the user's wallet/public key
+        console.log("User's wallet/public key:", body.account);
+
+        const amountInLamports = Math.floor(0.0001 * 1_000_000_000); // Convert SOL to Lamports
+        
+        if (amountInLamports <= 0) {
+            throw new Error("Amount must be greater than zero");
+        }
+    
+        const transaction = await transferSolTransaction({ from: body.account, amount: amountInLamports });
+    
+        const payload: ActionPostResponse = await createPostResponse({
+            fields: {
+                transaction,
+                message: `Enter the giveaway`,
+            },
+        });
+        
+        return Response.json(payload, {
+            headers: ACTIONS_CORS_HEADERS,
+        });
+    } catch (error) {
+        console.error("Error processing POST request:", error);
+        return Response.json({ error: (error as Error).message }, {
+            status: 400,
+            headers: ACTIONS_CORS_HEADERS,
+        });
+    }    
 }
