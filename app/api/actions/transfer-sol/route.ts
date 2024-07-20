@@ -4,7 +4,7 @@ import { transferSolTransaction } from "./transaction";
 export const GET = async (req: Request) => {
     const payload: ActionGetResponse = {
         title: "Test your luck! and win amazing prizes",
-        icon: "https://images3.alphacoders.com/135/1352223.jpeg",
+        icon: "https://w0.peakpx.com/wallpaper/288/839/HD-wallpaper-world-cup-trophy-art-yellow-art-world-cup-trophy.jpg",
         description: "Get a chance to get amazing rewards by only 0.0001 SOL!",
         label: "Register"
     }
@@ -18,12 +18,12 @@ export const OPTIONS = GET;
 
 export const POST = async (req: Request) => {
     const body: ActionPostRequest = await req.json();
-    const transaction = await transferSolTransaction({ from: body.account, amount: 1 })
+    const transaction = await transferSolTransaction({ from: body.account, amount: 0.0001 })
 
     const payload: ActionPostResponse = await createPostResponse({
         fields: {
             transaction,
-            message: `Send 1 SOL`,
+            message: `Send 0.0001 SOL`,
         },
     });
     return Response.json(payload, {
